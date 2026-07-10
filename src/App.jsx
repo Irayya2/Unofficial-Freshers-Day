@@ -7,6 +7,7 @@ import {
   FiCheckCircle,
   FiGift,
   FiInstagram,
+  FiLinkedin,
   FiMapPin,
   FiMusic,
   FiPhone,
@@ -267,13 +268,22 @@ function App() {
 
       {/* ── Footer ── */}
       <footer className="border-t border-[#3B3B48] bg-[#0B0B0F]/80 py-8">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 text-center text-sm text-[#B8BDC7] sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-          <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start">
-            <a href="https://instagram.com" className="flex items-center gap-2 transition hover:text-[#B026FF]"><FiInstagram /> Instagram</a>
-            <a href="https://wa.me" className="flex items-center gap-2 transition hover:text-[#B026FF]"><FiPhone /> WhatsApp</a>
-            <span className="flex items-center gap-2"><FiMapPin /> Main Campus, Block B</span>
+        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 text-center text-sm text-[#B8BDC7] sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+          <div className="flex flex-col items-center justify-center gap-6 lg:flex-row lg:justify-start">
+            <div className="flex flex-col items-center gap-4 sm:flex-row">
+              <a href="/image.png" target="_blank" rel="noopener noreferrer" className="transition hover:scale-105">
+                <img src="/image.png" alt="Profile" className="h-12 w-12 rounded-full border-2 border-[#B026FF] object-cover shadow-[0_0_15px_rgba(176,38,255,0.4)]" />
+              </a>
+              <div className="flex items-center gap-4">
+                <a href="https://www.instagram.com/_iruuux?igsh=MWtxbXo5OXFpcXpkbQ==" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 transition hover:text-[#B026FF]"><FiInstagram /> Instagram</a>
+                <a href="https://www.linkedin.com/in/irayya-hiremath-aa0232330?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 transition hover:text-[#B026FF]"><FiLinkedin /> LinkedIn</a>
+              </div>
+            </div>
           </div>
-          <p>Made with ❤️ for Freshers</p>
+          <div className="flex flex-col items-center gap-1 lg:items-end">
+            <p>Made it ❤️ for Freshers</p>
+            <p className="text-xs italic text-[#B8BDC7]/70">"Creating memories that last a lifetime."</p>
+          </div>
         </div>
       </footer>
 
