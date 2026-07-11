@@ -17,7 +17,7 @@ import {
 import { IoGameControllerOutline } from 'react-icons/io5'
 import SectionTitle from './components/SectionTitle'
 import GlassCard from './components/GlassCard'
-import { highlights, testimonials, whyAttend } from './data/eventInfo'
+import { highlights, whyAttend } from './data/eventInfo'
 import VideoBanner from './components/VideoBanner'
 import InterestForm from './components/InterestForm'
 import djImage from './components/dj-party.png'
@@ -47,7 +47,7 @@ function App() {
   }, [])
 
   return (
-    <div className="relative overflow-hidden text-[#F5F5F5]">
+    <div className="relative overflow-hidden text-[var(--theme-text)] transition-colors duration-300">
       {/* ── Floating Water Bubbles ── */}
       <div className="water-bubbles-container">
         <div className="bubble bubble-1" />
@@ -76,19 +76,19 @@ function App() {
 
 
       {/* ── Hero Banner — full viewport width ── */}
-      <section className="relative min-h-[650px] w-full overflow-hidden sm:min-h-[700px] lg:min-h-[850px] flex items-center justify-center">
+      <section className="hero-section flex items-center justify-center">
           {/* ── Background Banner Video Playlist ── */}
           <VideoBanner />
           
           {/* Cinematic gradient overlays */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-[#0B0B0F]/30 to-[#0B0B0F]/45" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[var(--theme-gradient-overlay-from)] via-[var(--theme-gradient-overlay-alpha1)] to-[var(--theme-gradient-overlay-alpha2)] transition-colors duration-300" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(138,43,226,0.15),_transparent_70%)]" />
 
 
 
           {/* ── Scroll Down Indicator ── */}
-          <div className="absolute inset-x-0 bottom-6 flex justify-center z-10">
-            <a href="#why-attend" className="scroll-indicator flex flex-col items-center gap-1.5 text-white/70 transition hover:text-white">
+          <div className="absolute inset-x-0 bottom-6 hidden md:flex justify-center z-10">
+            <a href="#why-attend" className="scroll-indicator flex flex-col items-center gap-1.5 text-[var(--theme-text)]/70 transition hover:text-[var(--theme-text-heading)]">
               <span className="text-[10px] font-medium uppercase tracking-[0.3em]">Scroll</span>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="6 9 12 15 18 9" />
@@ -119,37 +119,37 @@ function App() {
               let cardStyle = undefined
               if (isLiveDJ) {
                 cardStyle = {
-                  backgroundImage: `linear-gradient(to bottom, rgba(11, 11, 15, 0.4), rgba(11, 11, 15, 0.95)), url(${djImage})`,
+                  backgroundImage: `linear-gradient(to bottom, var(--theme-card-overlay-alpha1), var(--theme-card-overlay-alpha2)), url(${djImage})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }
               } else if (isFunGames) {
                 cardStyle = {
-                  backgroundImage: `linear-gradient(to bottom, rgba(11, 11, 15, 0.4), rgba(11, 11, 15, 0.95)), url(${funGamesImage})`,
+                  backgroundImage: `linear-gradient(to bottom, var(--theme-card-overlay-alpha1), var(--theme-card-overlay-alpha2)), url(${funGamesImage})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }
               } else if (isSurpriseGifts) {
                 cardStyle = {
-                  backgroundImage: `linear-gradient(to bottom, rgba(11, 11, 15, 0.4), rgba(11, 11, 15, 0.95)), url(${surpriseGiftsImage})`,
+                  backgroundImage: `linear-gradient(to bottom, var(--theme-card-overlay-alpha1), var(--theme-card-overlay-alpha2)), url(${surpriseGiftsImage})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }
               } else if (isPhotoBooth) {
                 cardStyle = {
-                  backgroundImage: `linear-gradient(to bottom, rgba(11, 11, 15, 0.4), rgba(11, 11, 15, 0.95)), url(${photoBoothImage})`,
+                  backgroundImage: `linear-gradient(to bottom, var(--theme-card-overlay-alpha1), var(--theme-card-overlay-alpha2)), url(${photoBoothImage})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }
               } else if (isUnlimitedFun) {
                 cardStyle = {
-                  backgroundImage: `linear-gradient(to bottom, rgba(11, 11, 15, 0.4), rgba(11, 11, 15, 0.95)), url(${unlimitedFunImage})`,
+                  backgroundImage: `linear-gradient(to bottom, var(--theme-card-overlay-alpha1), var(--theme-card-overlay-alpha2)), url(${unlimitedFunImage})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }
               } else if (isMeetSeniors) {
                 cardStyle = {
-                  backgroundImage: `linear-gradient(to bottom, rgba(11, 11, 15, 0.4), rgba(11, 11, 15, 0.95)), url(${meetSeniorsImage})`,
+                  backgroundImage: `linear-gradient(to bottom, var(--theme-card-overlay-alpha1), var(--theme-card-overlay-alpha2)), url(${meetSeniorsImage})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }
@@ -158,15 +158,15 @@ function App() {
               return (
                 <motion.div key={item.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.45, delay: index * 0.06 }}>
                   <GlassCard 
-                    className="h-full border-[#3B3B48] relative overflow-hidden"
+                    className="h-full border-[var(--theme-border)] relative overflow-hidden"
                     style={cardStyle}
                   >
                     <div className="relative z-10">
-                      <div className="mb-4 inline-flex rounded-2xl bg-gradient-to-br from-[#8A2BE2]/20 to-[#FF7A18]/20 p-3 text-[#B026FF]">
+                      <div className="mb-4 inline-flex rounded-2xl bg-gradient-to-br from-[var(--theme-purple)]/20 to-[var(--theme-orange)]/20 p-3 text-[var(--theme-violet)]">
                         <Icon size={24} />
                       </div>
-                      <h3 className="text-xl font-semibold text-white">{item.title}</h3>
-                      <p className="mt-3 text-sm leading-7 text-[#F5F5F5] font-medium">{item.description}</p>
+                      <h3 className="text-xl font-semibold text-[var(--theme-text-heading)] transition-colors duration-300">{item.title}</h3>
+                      <p className="mt-3 text-sm leading-7 text-[var(--theme-text-body)] font-medium transition-colors duration-300">{item.description}</p>
                     </div>
                   </GlassCard>
                 </motion.div>
@@ -185,7 +185,7 @@ function App() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             {highlights.map((item, index) => (
               <motion.div key={item} initial={{ opacity: 0, scale: 0.96 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.35, delay: index * 0.04 }}>
-                <GlassCard className="flex h-full items-center justify-center border-[#3B3B48] text-center text-lg font-semibold text-white">
+                <GlassCard className="flex h-full items-center justify-center border-[var(--theme-border)] text-center text-lg font-semibold text-[var(--theme-text-heading)]">
                   {item}
                 </GlassCard>
               </motion.div>
@@ -204,7 +204,7 @@ function App() {
           <div className="grid gap-5 md:grid-cols-3">
             {[video2, video3, video4].map((videoSrc, index) => (
               <motion.div key={index} whileHover={{ y: -8, scale: 1.01 }} transition={{ duration: 0.2 }}>
-                <GlassCard className="overflow-hidden border-[#3B3B48] p-0 h-64">
+                <GlassCard className="overflow-hidden border-[var(--theme-border)] p-0 h-64">
                   <video
                     src={videoSrc}
                     muted
@@ -219,46 +219,25 @@ function App() {
           </div>
         </section>
 
-        {/* ── Testimonials ── */}
-        <section className="space-y-8 py-6">
-          <SectionTitle
-            eyebrow="What Students Are Saying"
-            title="The kind of night that becomes a campus legend"
-            description="Freshers from across the college are already talking about the energy, the crowd, and the memories waiting to be made."
-          />
-          <div className="grid gap-5 lg:grid-cols-3">
-            {testimonials.map((testimonial, index) => (
-              <motion.div key={testimonial.name} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.4, delay: index * 0.06 }}>
-                <GlassCard className="h-full border-[#3B3B48]">
-                  <div className="mb-4 flex items-center gap-2 text-[#FFD166]">
-                    {Array.from({ length: 5 }).map((_, starIndex) => (
-                      <FiStar key={starIndex} />
-                    ))}
-                  </div>
-                  <p className="text-sm leading-8 text-[#B8BDC7]">"{testimonial.quote}"</p>
-                  <div className="mt-5">
-                    <p className="font-semibold text-white">{testimonial.name}</p>
-                    <p className="text-sm text-[#B8BDC7]">{testimonial.role}</p>
-                  </div>
-                </GlassCard>
-              </motion.div>
-            ))}
-          </div>
-        </section>
+
 
 
 
         {/* ── Event Rules ── */}
         <section className="py-6">
-          <GlassCard className="border-[#3B3B48]">
+          <GlassCard className="border-[var(--theme-border)]">
             <SectionTitle eyebrow="Event Rules" title="Be part of the celebration responsibly" description="A smooth, safe, and joyful night for everyone starts with a few simple expectations." centered={false} />
             <div className="mt-6 grid gap-4 md:grid-cols-2">
-              <div className="rounded-2xl border border-[#3B3B48] bg-[#0B0B0F]/50 p-4 text-sm leading-8 text-[#B8BDC7]">
-                <p className="mb-3 flex items-center gap-2 font-semibold text-white"><FiCheckCircle className="text-[#B026FF]" /> Respect everyone around you</p>
+              <div className="rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-rules-bg)] p-4 text-sm leading-8 text-[var(--theme-text-muted)] transition-all duration-300">
+                <p className="mb-3 flex items-center gap-2 font-semibold text-[var(--theme-text-heading)]"><FiCheckCircle className="text-[var(--theme-violet)]" /> Totally Unofficial</p>
+                This event is completely unofficial and is organised independently by students. It is not affiliated with, endorsed by, or the responsibility of the official college administration.
+              </div>
+              <div className="rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-rules-bg)] p-4 text-sm leading-8 text-[var(--theme-text-muted)] transition-all duration-300">
+                <p className="mb-3 flex items-center gap-2 font-semibold text-[var(--theme-text-heading)]"><FiCheckCircle className="text-[var(--theme-violet)]" /> Respect everyone around you</p>
                 Follow the event guide, keep the spirit positive, and make space for each person to enjoy the evening.
               </div>
-              <div className="rounded-2xl border border-[#3B3B48] bg-[#0B0B0F]/50 p-4 text-sm leading-8 text-[#B8BDC7]">
-                <p className="mb-3 flex items-center gap-2 font-semibold text-white"><FiCheckCircle className="text-[#B026FF]" /> Enjoy responsibly</p>
+              <div className="rounded-2xl border border-[var(--theme-border)] bg-[var(--theme-rules-bg)] p-4 text-sm leading-8 text-[var(--theme-text-muted)] transition-all duration-300">
+                <p className="mb-3 flex items-center gap-2 font-semibold text-[var(--theme-text-heading)]"><FiCheckCircle className="text-[var(--theme-violet)]" /> Enjoy responsibly</p>
                 Stay mindful of campus etiquette and help keep the celebration safe, fun, and welcoming.
               </div>
             </div>
@@ -267,22 +246,22 @@ function App() {
       </main>
 
       {/* ── Footer ── */}
-      <footer className="border-t border-[#3B3B48] bg-[#0B0B0F]/80 py-8">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 text-center text-sm text-[#B8BDC7] sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+      <footer className="border-t border-[var(--theme-border)] bg-[var(--theme-footer-bg)] py-8 transition-colors duration-300">
+        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 text-center text-sm text-[var(--theme-text-muted)] sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
           <div className="flex flex-col items-center justify-center gap-6 lg:flex-row lg:justify-start">
             <div className="flex flex-col items-center gap-4 sm:flex-row">
               <a href="/image.png" target="_blank" rel="noopener noreferrer" className="transition hover:scale-105">
-                <img src="/image.png" alt="Profile" className="h-12 w-12 rounded-full border-2 border-[#B026FF] object-cover shadow-[0_0_15px_rgba(176,38,255,0.4)]" />
+                <img src="/image.png" alt="Profile" className="h-12 w-12 rounded-full border-2 border-[var(--theme-violet)] object-cover shadow-[0_0_15px_rgba(176,38,255,0.4)]" />
               </a>
               <div className="flex items-center gap-4">
-                <a href="https://www.instagram.com/_iruuux?igsh=MWtxbXo5OXFpcXpkbQ==" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 transition hover:text-[#B026FF]"><FiInstagram /> Instagram</a>
-                <a href="https://www.linkedin.com/in/irayya-hiremath-aa0232330?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 transition hover:text-[#B026FF]"><FiLinkedin /> LinkedIn</a>
+                <a href="https://www.instagram.com/_iruuux?igsh=MWtxbXo5OXFpcXpkbQ==" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 transition hover:text-[var(--theme-violet)]"><FiInstagram /> Instagram</a>
+                <a href="https://www.linkedin.com/in/irayya-hiremath-aa0232330?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 transition hover:text-[var(--theme-violet)]"><FiLinkedin /> LinkedIn</a>
               </div>
             </div>
           </div>
           <div className="flex flex-col items-center gap-1 lg:items-end">
             <p>Made it ❤️ for Freshers</p>
-            <p className="text-xs italic text-[#B8BDC7]/70">"Creating memories that last a lifetime."</p>
+            <p className="text-xs italic text-[var(--theme-text-muted)]/70">"Creating memories that last a lifetime."</p>
           </div>
         </div>
       </footer>
