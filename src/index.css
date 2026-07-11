@@ -2,44 +2,126 @@
 
 @theme {
   /* ── Halloween Cinematic Palette ── */
-  --color-halloween-bg: #0B0B0F;
-  --color-halloween-surface: #18181F;
-  --color-halloween-card: #23232D;
-  --color-halloween-border: #3B3B48;
+  --color-halloween-bg: #1A1A24;
+  --color-halloween-surface: #242433;
+  --color-halloween-card: #2E2E42;
+  --color-halloween-border: #5A5A72;
 
-  --color-halloween-purple: #8A2BE2;
-  --color-halloween-violet: #B026FF;
-  --color-halloween-orange: #FF7A18;
-  --color-halloween-gold: #FFD166;
+  --color-halloween-purple: #A855F7;
+  --color-halloween-violet: #C84DFF;
+  --color-halloween-orange: #FF8C30;
+  --color-halloween-gold: #FFD700;
 
-  --color-halloween-text: #F5F5F5;
-  --color-halloween-muted: #B8BDC7;
+  --color-halloween-text: #FFFFFF;
+  --color-halloween-muted: #D0D5E0;
 }
 
-:root {
+/* ── Dark Theme (Default) ── */
+:root,
+[data-theme="dark"] {
+  --theme-bg: #0B1215;
+  --theme-surface: #121B1E;
+  --theme-card: #172327;
+  --theme-card-alpha: rgba(23, 35, 39, 0.75);
+  --theme-border: #35474D;
+  --theme-border-glass: rgba(0, 255, 255, 0.12);
+
+  --theme-text: #FFFFFF;
+  --theme-text-heading: #FFFFFF;
+  --theme-text-muted: #CBD5E1;
+  --theme-text-body: #FFFFFF;
+
+  --theme-purple: #00D8F6;
+  --theme-violet: #00E5FF;
+  --theme-orange: #00F5C0;
+  --theme-gold: #7DD3FC;
+
+  --theme-glass-bg: linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+  --theme-glass-shadow: 0 20px 80px rgba(11, 18, 21, 0.55);
+  --theme-glass-card-shadow: 0 20px 80px rgba(11, 18, 21, 0.45);
+
+  --theme-gradient-overlay-from: #0B1215;
+  --theme-gradient-overlay-alpha1: rgba(11, 18, 21, 0.2);
+  --theme-gradient-overlay-alpha2: rgba(11, 18, 21, 0.35);
+
+  --theme-card-overlay-alpha1: rgba(11, 18, 21, 0.3);
+  --theme-card-overlay-alpha2: rgba(11, 18, 21, 0.88);
+
+  --theme-blob-opacity: 0.50;
+  --theme-particle-bg: rgba(255, 255, 255, 0.70);
+  --theme-particle-shadow: 0 0 18px rgba(0, 229, 255, 0.70);
+
+  --theme-bubble-highlight: rgba(255, 255, 255, 0.35);
+  --theme-bubble-shadow: rgba(0, 0, 0, 0.18);
+
+  --theme-rules-bg: rgba(18, 27, 30, 0.6);
+  --theme-footer-bg: rgba(11, 18, 21, 0.85);
+  --theme-modal-backdrop: rgba(5, 8, 10, 0.75);
+  --theme-modal-bg: #121B1E;
+  --theme-input-bg: #0B1215;
+  --theme-placeholder: rgba(255, 255, 255, 0.50);
+  --theme-alert-bg: rgba(18, 27, 30, 0.95);
+  --theme-toast-bg: rgba(18, 27, 30, 0.95);
+  --theme-selection-bg: rgba(0, 229, 255, 0.45);
+
   font-family: Inter, 'Segoe UI', sans-serif;
   line-height: 1.5;
   font-weight: 400;
   color-scheme: dark;
-  color: #F5F5F5;
-  background-color: #0B0B0F;
+  color: var(--theme-text);
+  background-color: var(--theme-bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+
+
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  width: 100%;
+  /* Ensure the browser registers correct viewport height on mobile */
+  height: 100%;
+}
+
+/* ── Hero section: always fill the full visible viewport ── */
+.hero-section {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 480px) {
+  .hero-section {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-section {
+    min-height: 100svh; /* small viewport height — hides browser chrome */
+    min-height: 100dvh; /* dynamic viewport height — best modern support  */
+    min-height: 100vh;  /* fallback for older browsers                    */
+    height: 100svh;
+    height: 100dvh;
+    aspect-ratio: auto;
+  }
 }
 
 body {
   margin: 0;
   min-height: 100vh;
+  overflow-x: hidden;
+  width: 100%;
   background:
-    radial-gradient(circle at top left, rgba(138, 43, 226, 0.16), transparent 24%),
-    radial-gradient(circle at bottom right, rgba(255, 122, 24, 0.18), transparent 24%),
-    #0B0B0F;
+    radial-gradient(circle at top left, rgba(0, 229, 255, 0.18), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(0, 245, 192, 0.18), transparent 28%),
+    var(--theme-bg);
+  color: var(--theme-text);
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 * {
@@ -51,21 +133,21 @@ body {
 }
 
 ::selection {
-  background: rgba(138, 43, 226, 0.45);
-  color: white;
+  background: var(--theme-selection-bg);
+  color: var(--theme-text-heading);
 }
 
 /* ── Glass Panel ── */
 .glass-panel {
-  background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+  background: var(--theme-glass-bg);
   backdrop-filter: blur(18px);
-  border: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 20px 80px rgba(11, 11, 15, 0.55);
+  border: 1px solid var(--theme-border-glass);
+  box-shadow: var(--theme-glass-shadow);
 }
 
 /* ── Text Gradient — Purple → Violet → Orange ── */
 .text-gradient {
-  background: linear-gradient(90deg, #8A2BE2, #B026FF, #FF7A18);
+  background: linear-gradient(90deg, var(--theme-purple), var(--theme-violet), var(--theme-orange));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -96,8 +178,9 @@ body {
   position: absolute;
   border-radius: 9999px;
   filter: blur(80px);
-  opacity: 0.32;
+  opacity: var(--theme-blob-opacity);
   animation: floatGlow 8s ease-in-out infinite;
+  transition: opacity 0.4s ease;
 }
 
 .blob-one {
@@ -105,7 +188,7 @@ body {
   left: -3rem;
   width: 18rem;
   height: 18rem;
-  background: rgba(138, 43, 226, 0.45);
+  background: rgba(0, 229, 255, 0.40);
 }
 
 .blob-two {
@@ -113,7 +196,7 @@ body {
   top: 8rem;
   width: 16rem;
   height: 16rem;
-  background: rgba(176, 38, 255, 0.35);
+  background: rgba(0, 216, 246, 0.35);
   animation-delay: 1s;
 }
 
@@ -122,7 +205,7 @@ body {
   left: 40%;
   width: 20rem;
   height: 20rem;
-  background: rgba(255, 122, 24, 0.24);
+  background: rgba(0, 245, 192, 0.30);
   animation-delay: 2s;
 }
 
@@ -132,9 +215,10 @@ body {
   width: 0.35rem;
   height: 0.35rem;
   border-radius: 9999px;
-  background: rgba(255,255,255,0.45);
-  box-shadow: 0 0 18px rgba(138, 43, 226, 0.50);
+  background: var(--theme-particle-bg);
+  box-shadow: var(--theme-particle-shadow);
   animation: drift 5s ease-in-out infinite;
+  transition: background 0.4s ease, box-shadow 0.4s ease;
 }
 
 @keyframes floatGlow {
@@ -187,14 +271,15 @@ body {
 .bubble {
   position: absolute;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.03) 40%, rgba(255, 255, 255, 0.1) 60%, rgba(255, 255, 255, 0.25) 80%, rgba(255, 255, 255, 0.4) 100%);
+  background: radial-gradient(circle at 30% 30%, var(--theme-bubble-highlight) 0%, rgba(255, 255, 255, 0.03) 40%, rgba(255, 255, 255, 0.1) 60%, rgba(255, 255, 255, 0.25) 80%, rgba(255, 255, 255, 0.4) 100%);
   box-shadow: 
     inset 0 2px 5px rgba(255, 255, 255, 0.4), 
     inset -2px -2px 4px rgba(0, 0, 0, 0.2),
-    0 4px 8px rgba(0, 0, 0, 0.25),
+    0 4px 8px var(--theme-bubble-shadow),
     0 0 5px rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(1px);
   will-change: transform;
+  transition: box-shadow 0.4s ease;
 }
 
 .bubble::after {
@@ -289,3 +374,207 @@ body {
   100% { transform: translate(-2vw, -4vh) scale(1.04); }
 }
 
+
+
+/* ══════════════════════════════════════
+   RESPONSIVE / PORTABLE — Mobile First
+   ══════════════════════════════════════ */
+
+/* ── Safe Area (notched phones: iPhone, Android) ── */
+body {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ── Small phones (≤ 480px) ── */
+@media (max-width: 480px) {
+  /* Shrink blobs so they don't overflow and distort layout */
+  .blob-one {
+    width: 10rem;
+    height: 10rem;
+    top: -2rem;
+    left: -2rem;
+  }
+  .blob-two {
+    width: 9rem;
+    height: 9rem;
+    right: -2rem;
+    top: 4rem;
+  }
+  .blob-three {
+    width: 11rem;
+    height: 11rem;
+    left: 20%;
+    bottom: 3rem;
+  }
+
+  /* Fewer / smaller particles on small screens */
+  .particle {
+    width: 0.25rem;
+    height: 0.25rem;
+  }
+
+  /* Registration alert banner — full width with safe inset */
+  .fixed.bottom-6.right-6 {
+    right: 0.75rem;
+    left: 0.75rem;
+    bottom: calc(0.75rem + env(safe-area-inset-bottom));
+    max-width: 100%;
+  }
+
+  /* Bubbles — reduce size so they don't cause scroll */
+  .bubble-1 { width: 20px; height: 20px; }
+  .bubble-2 { width: 14px; height: 14px; }
+  .bubble-3 { width: 28px; height: 28px; }
+  .bubble-4 { width: 18px; height: 18px; }
+  .bubble-5 { width: 22px; height: 22px; }
+}
+
+/* ── Mobile (≤ 640px) ── */
+@media (max-width: 640px) {
+  /* Hero section — full device height, no overflow */
+  section.relative.min-h-\[100dvh\] {
+    min-height: 100dvh;
+  }
+
+  /* Main content — tighter horizontal padding */
+  main.mx-auto {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    gap: 1.5rem;
+  }
+
+  /* Section title spacing */
+  .space-y-8 {
+    row-gap: 1.25rem;
+  }
+
+  /* Gallery cards — shorter height on mobile */
+  .h-64 {
+    height: 11rem;
+  }
+
+  /* Footer — ensure single column, centered */
+  footer .lg\:flex-row {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 1rem !important;
+  }
+  footer .lg\:items-end {
+    align-items: center !important;
+  }
+
+  /* Scroll indicator — ensure it stays above safe area */
+  .absolute.inset-x-0.bottom-6 {
+    bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  }
+
+  /* Toast notification — full-width, respects safe area */
+  .fixed.inset-x-4.top-6 {
+    top: calc(1.5rem + env(safe-area-inset-top));
+    left: 0.75rem;
+    right: 0.75rem;
+    inset-inline: 0.75rem;
+  }
+
+  /* Registration modal — full height friendly on mobile */
+  .relative.w-full.max-w-md {
+    max-height: 90dvh;
+    overflow-y: auto;
+    border-radius: 1.5rem;
+  }
+
+  /* Why Attend grid — single column on tiny screens */
+  .grid.gap-5.md\:grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Tablet (641px – 1024px) ── */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .blob-one { width: 14rem; height: 14rem; }
+  .blob-two { width: 12rem; height: 12rem; }
+  .blob-three { width: 16rem; height: 16rem; }
+
+  /* Gallery cards — medium height on tablet */
+  .h-64 { height: 14rem; }
+
+  /* Highlights grid — 3 columns on tablet */
+  .grid.gap-4.sm\:grid-cols-2.lg\:grid-cols-3.xl\:grid-cols-5 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ── Landscape phones (short height) ── */
+@media (max-height: 500px) and (orientation: landscape) {
+  section.relative.min-h-\[100dvh\] {
+    min-height: 100svh;
+  }
+  .blob-one, .blob-two, .blob-three {
+    opacity: 0.15;
+  }
+  .scroll-indicator {
+    bottom: 0.5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  main.mx-auto {
+    max-width: 80rem;
+  }
+}
+
+/* ══════════════════════════════════════════════
+   GlassCard — Click / Toggle Cyan Glow Effect
+   ══════════════════════════════════════════════ */
+
+/* Wrapper — relative positioning for the pulse overlay */
+.glass-card-clickable {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+/* Active (toggled-on) state — persistent cyan glow */
+.glass-card--active {
+  border-color: rgba(0, 229, 255, 0.45) !important;
+  box-shadow:
+    0 0 18px rgba(0, 229, 255, 0.25),
+    0 0 60px rgba(0, 229, 255, 0.10),
+    inset 0 0 30px rgba(0, 229, 255, 0.06) !important;
+}
+
+/* Pulse overlay — plays once per click, then fades out */
+.glass-card-pulse {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(0, 255, 255, 0.35) 0%,
+    rgba(0, 229, 255, 0.15) 40%,
+    transparent 70%
+  );
+  opacity: 0;
+  animation: cyan-pulse 0.6s ease-out forwards;
+}
+
+@keyframes cyan-pulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
