@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FiAlertTriangle, FiCheckCircle, FiLock, FiUnlock, FiUser, FiX, FiMail } from 'react-icons/fi'
 import { supabase } from '../supabaseClient'
@@ -17,6 +17,25 @@ const InterestForm = ({ onRegisterChange }) => {
     division: '',
   })
   const [errors, setErrors] = useState({})
+
+  // Error sound — plays on validation failure or unsuccessful registration
+  const errorAudioRef = useRef(null)
+  useEffect(() => {
+    const audio = new Audio('/WhatsApp Audio 2026-07-11 at 3.05.24 PM.mpeg')
+    audio.preload = 'auto'
+    audio.volume = 0.8
+    audio.load() // Force the browser to buffer the entire file
+    errorAudioRef.current = audio
+  }, [])
+
+  const playErrorSound = () => {
+    if (errorAudioRef.current) {
+      // Clone the node for instant playback — avoids seek/buffer delay
+      const clone = errorAudioRef.current.cloneNode()
+      clone.volume = 0.8
+      clone.play().catch(() => {})
+    }
+  }
 
   useEffect(() => {
     const saved = localStorage.getItem('unofficial_freshers_rsvp')
@@ -54,10 +73,21 @@ const InterestForm = ({ onRegisterChange }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!validate()) return
+    if (!validate()) {
+      playErrorSound()
+      return
+    }
 
     setIsSubmitting(true)
     setSubmitError('')
+
+    // Check for network connectivity before attempting the API call
+    if (!navigator.onLine) {
+      setSubmitError('No internet connection. Please check your network and try again.')
+      playErrorSound()
+      setIsSubmitting(false)
+      return
+    }
 
     try {
       const { error } = await supabase
@@ -89,6 +119,7 @@ const InterestForm = ({ onRegisterChange }) => {
     } catch (err) {
       console.error('Error submitting RSVP:', err)
       setSubmitError(err.message || 'Something went wrong. Please try again.')
+      playErrorSound()
     } finally {
       setIsSubmitting(false)
     }
@@ -115,22 +146,23 @@ const InterestForm = ({ onRegisterChange }) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
             transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-            className="fixed bottom-6 right-6 z-40 max-w-sm rounded-3xl border border-[#FF7A18]/30 bg-[#18181F]/90 p-5 shadow-[0_20px_50px_rgba(255,122,24,0.15)] backdrop-blur-xl md:max-w-md"
+            className="fixed bottom-4 right-4 left-4 z-40 rounded-3xl border border-[var(--theme-border)] bg-[var(--theme-alert-bg)] p-4 shadow-[var(--theme-glass-shadow)] backdrop-blur-xl transition-colors duration-300 sm:bottom-6 sm:left-auto sm:right-6 sm:max-w-sm md:max-w-md sm:p-5"
+            style={{ paddingBottom: 'calc(1rem + env(safe-area-inset-bottom))' }}
           >
             <div className="flex gap-4">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#FF7A18]/20 text-[#FF7A18]">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[var(--theme-violet)]/10 text-[var(--theme-violet)]">
                 <FiAlertTriangle size={20} className="animate-pulse" />
               </div>
               <div className="space-y-2">
-                <h4 className="font-semibold text-white">Action Required for Freshers</h4>
-                <p className="text-xs leading-relaxed text-[#B8BDC7]">
-                  Interested in the party? You must register your details (Name, Gmail, Sem, Div) now to reserve your spot and unlock Passes & WhatsApp group links.
+                <h4 className="text-lg font-bold text-[var(--theme-text-heading)] transition-colors duration-300">Freshers Registration</h4>
+                <p className="text-xs leading-relaxed text-[var(--theme-text-muted)] transition-colors duration-300">
+                  Complete your registration now to reserve your spot.
                 </p>
                 <button
                   onClick={() => setIsOpen(true)}
-                  className="mt-2 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#8A2BE2] to-[#FF7A18] px-4 py-2 text-xs font-semibold text-white shadow-lg transition-transform hover:scale-105"
+                  className="mt-2 inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold text-white shadow-lg transition-transform hover:scale-105" style={{ backgroundColor: '#4169E1' }}
                 >
-                  <FiLock size={12} /> Register Details
+                  <FiLock size={12} /> Register Now
                 </button>
               </div>
             </div>
@@ -148,7 +180,7 @@ const InterestForm = ({ onRegisterChange }) => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="absolute inset-0 bg-[#0B0B0F]/80 backdrop-blur-md"
+              className="absolute inset-0 bg-[var(--theme-modal-backdrop)] backdrop-blur-md"
             />
 
             {/* Modal Content */}
@@ -157,38 +189,39 @@ const InterestForm = ({ onRegisterChange }) => {
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.95, y: 30, opacity: 0 }}
               transition={{ type: 'spring', duration: 0.5 }}
-              className="relative w-full max-w-md overflow-hidden rounded-3xl border border-[#3B3B48] bg-[#18181F] p-6 shadow-2xl md:p-8"
+              className="relative w-full max-w-md overflow-hidden overflow-y-auto rounded-3xl border border-[var(--theme-border)] bg-[var(--theme-modal-bg)] p-5 shadow-2xl md:p-8 transition-colors duration-300"
+              style={{ maxHeight: '90dvh' }}
             >
               {/* Decorative light bloom in modal */}
-              <div className="pointer-events-none absolute -right-16 -top-16 h-32 w-32 rounded-full bg-[#8A2BE2]/20 blur-2xl" />
-              <div className="pointer-events-none absolute -left-16 -bottom-16 h-32 w-32 rounded-full bg-[#FF7A18]/20 blur-2xl" />
+              <div className="pointer-events-none absolute -right-16 -top-16 h-32 w-32 rounded-full bg-[var(--theme-purple)]/20 blur-2xl" />
+              <div className="pointer-events-none absolute -left-16 -bottom-16 h-32 w-32 rounded-full bg-[var(--theme-orange)]/20 blur-2xl" />
 
               {/* Close Button */}
               <button
                 onClick={() => setIsOpen(false)}
-                className="absolute right-4 top-4 rounded-xl border border-[#3B3B48] p-2 text-[#B8BDC7] transition hover:bg-[#23232D] hover:text-white"
+                className="absolute right-4 top-4 rounded-xl border border-[var(--theme-border)] p-2 text-[var(--theme-text-muted)] transition hover:bg-[var(--theme-card)] hover:text-[var(--theme-text-heading)]"
               >
                 <FiX size={18} />
               </button>
 
               <div className="mb-6 flex flex-col items-center text-center">
-                <div className="mb-3 inline-flex rounded-2xl bg-gradient-to-br from-[#8A2BE2]/20 to-[#FF7A18]/20 p-4 text-[#B026FF]">
+                <div className="mb-3 inline-flex rounded-2xl bg-gradient-to-br from-[var(--theme-purple)]/20 to-[var(--theme-orange)]/20 p-4 text-[var(--theme-violet)]">
                   <FiUnlock size={28} />
                 </div>
-                <h3 className="text-2xl font-bold text-white">Unlock Opportunities</h3>
-                <p className="mt-2 text-sm text-[#B8BDC7]">
-                  Provide your details to register for the Unofficial Freshers Event and get access to passes.
+                <h3 className="text-2xl font-bold text-[var(--theme-text-heading)] transition-colors duration-300">Registration</h3>
+                <p className="mt-2 text-sm text-[var(--theme-text-muted)] transition-colors duration-300">
+                  Fill in your details to register for the Unofficial Freshers Event and get access to passes.
                 </p>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Name */}
                 <div className="space-y-1">
-                  <label htmlFor="name" className="text-xs font-semibold uppercase tracking-wider text-[#B8BDC7]">
+                  <label htmlFor="name" className="text-xs font-semibold uppercase tracking-wider text-[var(--theme-text-muted)] transition-colors duration-300">
                     Full Name
                   </label>
                   <div className="relative">
-                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-[#B8BDC7]">
+                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-[var(--theme-text-muted)] transition-colors duration-300">
                       <FiUser size={16} />
                     </span>
                     <input
@@ -198,8 +231,8 @@ const InterestForm = ({ onRegisterChange }) => {
                       placeholder="e.g. John Doe"
                       value={formData.name}
                       onChange={handleInputChange}
-                      className={`w-full rounded-xl border bg-[#0B0B0F] py-3 pl-10 pr-4 text-sm text-white placeholder-white/35 outline-none transition focus:border-[#B026FF] focus:ring-1 focus:ring-[#B026FF] ${
-                        errors.name ? 'border-red-500' : 'border-[#3B3B48]'
+                      className={`w-full rounded-xl border bg-[var(--theme-input-bg)] py-3 pl-10 pr-4 text-sm text-[var(--theme-text-heading)] placeholder-[var(--theme-placeholder)] outline-none transition-all duration-300 focus:border-[var(--theme-violet)] focus:ring-1 focus:ring-[var(--theme-violet)] ${
+                        errors.name ? 'border-red-500' : 'border-[var(--theme-border)]'
                       }`}
                     />
                   </div>
@@ -208,11 +241,11 @@ const InterestForm = ({ onRegisterChange }) => {
 
                 {/* Gmail */}
                 <div className="space-y-1">
-                  <label htmlFor="gmail" className="text-xs font-semibold uppercase tracking-wider text-[#B8BDC7]">
+                  <label htmlFor="gmail" className="text-xs font-semibold uppercase tracking-wider text-[var(--theme-text-muted)] transition-colors duration-300">
                     Gmail Address
                   </label>
                   <div className="relative">
-                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-[#B8BDC7]">
+                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-[var(--theme-text-muted)] transition-colors duration-300">
                       <FiMail size={16} />
                     </span>
                     <input
@@ -222,8 +255,14 @@ const InterestForm = ({ onRegisterChange }) => {
                       placeholder="e.g. johndoe@gmail.com"
                       value={formData.gmail}
                       onChange={handleInputChange}
-                      className={`w-full rounded-xl border bg-[#0B0B0F] py-3 pl-10 pr-4 text-sm text-white placeholder-white/35 outline-none transition focus:border-[#B026FF] focus:ring-1 focus:ring-[#B026FF] ${
-                        errors.gmail ? 'border-red-500' : 'border-[#3B3B48]'
+                      onBlur={() => {
+                        if (formData.gmail.trim() && !/^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(formData.gmail.trim())) {
+                          setErrors((prev) => ({ ...prev, gmail: 'Please enter a valid @gmail.com address' }))
+                          playErrorSound()
+                        }
+                      }}
+                      className={`w-full rounded-xl border bg-[var(--theme-input-bg)] py-3 pl-10 pr-4 text-sm text-[var(--theme-text-heading)] placeholder-[var(--theme-placeholder)] outline-none transition-all duration-300 focus:border-[var(--theme-violet)] focus:ring-1 focus:ring-[var(--theme-violet)] ${
+                        errors.gmail ? 'border-red-500' : 'border-[var(--theme-border)]'
                       }`}
                     />
                   </div>
@@ -232,7 +271,7 @@ const InterestForm = ({ onRegisterChange }) => {
 
                 {/* Semester */}
                 <div className="space-y-1">
-                  <label htmlFor="semester" className="text-xs font-semibold uppercase tracking-wider text-[#B8BDC7]">
+                  <label htmlFor="semester" className="text-xs font-semibold uppercase tracking-wider text-[var(--theme-text-muted)] transition-colors duration-300">
                     Semester
                   </label>
                   <select
@@ -240,11 +279,11 @@ const InterestForm = ({ onRegisterChange }) => {
                     name="semester"
                     value={formData.semester}
                     onChange={handleInputChange}
-                    className={`w-full rounded-xl border bg-[#0B0B0F] px-4 py-3 text-sm text-white outline-none transition focus:border-[#B026FF] focus:ring-1 focus:ring-[#B026FF] ${
-                      errors.semester ? 'border-red-500' : 'border-[#3B3B48]'
+                    className={`w-full rounded-xl border bg-[var(--theme-input-bg)] px-4 py-3 text-sm text-[var(--theme-text-heading)] outline-none transition-all duration-300 focus:border-[var(--theme-violet)] focus:ring-1 focus:ring-[var(--theme-violet)] ${
+                      errors.semester ? 'border-red-500' : 'border-[var(--theme-border)]'
                     }`}
                   >
-                    <option value="">Select Semester</option>
+                    <option value="" className="text-[var(--theme-text-muted)]">Select Semester</option>
                     <option value="Sem 1">Semester 1</option>
                     <option value="Sem 2">Semester 2</option>
                     <option value="Sem 3">Semester 3</option>
@@ -257,7 +296,7 @@ const InterestForm = ({ onRegisterChange }) => {
 
                 {/* Division */}
                 <div className="space-y-1">
-                  <label htmlFor="division" className="text-xs font-semibold uppercase tracking-wider text-[#B8BDC7]">
+                  <label htmlFor="division" className="text-xs font-semibold uppercase tracking-wider text-[var(--theme-text-muted)] transition-colors duration-300">
                     Division
                   </label>
                   <select
@@ -265,11 +304,11 @@ const InterestForm = ({ onRegisterChange }) => {
                     name="division"
                     value={formData.division}
                     onChange={handleInputChange}
-                    className={`w-full rounded-xl border bg-[#0B0B0F] px-4 py-3 text-sm text-white outline-none transition focus:border-[#B026FF] focus:ring-1 focus:ring-[#B026FF] ${
-                      errors.division ? 'border-red-500' : 'border-[#3B3B48]'
+                    className={`w-full rounded-xl border bg-[var(--theme-input-bg)] px-4 py-3 text-sm text-[var(--theme-text-heading)] outline-none transition-all duration-300 focus:border-[var(--theme-violet)] focus:ring-1 focus:ring-[var(--theme-violet)] ${
+                      errors.division ? 'border-red-500' : 'border-[var(--theme-border)]'
                     }`}
                   >
-                    <option value="" className="text-white/40">Select Division</option>
+                    <option value="" className="text-[var(--theme-text-muted)]">Select Division</option>
                     <option value="A">Division A</option>
                     <option value="B">Division B</option>
                     <option value="C">Division C</option>
@@ -302,12 +341,12 @@ const InterestForm = ({ onRegisterChange }) => {
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-x-4 top-6 z-50 mx-auto flex max-w-sm items-center gap-3 rounded-2xl border border-green-500/30 bg-[#18181F]/90 p-4 shadow-[0_15px_30px_rgba(0,255,0,0.1)] backdrop-blur-xl"
+            className="fixed inset-x-4 top-6 z-50 mx-auto flex max-w-sm items-center gap-3 rounded-2xl border border-green-500/30 bg-[var(--theme-toast-bg)] p-4 shadow-[0_15px_30px_rgba(0,255,0,0.1)] backdrop-blur-xl transition-colors duration-300"
           >
             <FiCheckCircle className="text-green-500" size={24} />
             <div>
-              <p className="font-semibold text-white">Awesome!</p>
-              <p className="text-xs text-[#B8BDC7]">All opportunities are now unlocked. Scroll down to claim!</p>
+              <p className="font-semibold text-[var(--theme-text-heading)] transition-colors duration-300">Awesome!</p>
+              <p className="text-xs text-[var(--theme-text-muted)] transition-colors duration-300">All opportunities are now unlocked. Scroll down to claim!</p>
             </div>
           </motion.div>
         )}
