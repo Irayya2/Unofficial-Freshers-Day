@@ -42,22 +42,3 @@ export const highlights = [
   'Snacks',
   'Networking',
 ]
-
-export const testimonials = [
-  {
-    name: 'Aarav',
-    role: 'Computer Science Fresher',
-    quote: 'The energy was unreal. I made friends instantly and the DJ night felt like a movie scene.',
-  },
-  {
-    name: 'Meera',
-    role: 'Electronics Fresher',
-    quote: 'Everything felt polished and exciting. The games and photo booth made the event so memorable.',
-  },
-  {
-    name: 'Karthik',
-    role: 'Mechanical Fresher',
-    quote: 'It was the perfect welcome to college life. I loved the mix of fun, networking, and surprises.',
-  },
-]
-
