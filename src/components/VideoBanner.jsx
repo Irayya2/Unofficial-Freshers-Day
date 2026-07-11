@@ -68,12 +68,15 @@ const VideoBanner = () => {
   }, [videoSrc, showVideo])
 
   return (
-    <div className="absolute inset-0 h-full w-full bg-[#0B0B0F]">
+    <div
+      className="absolute inset-0 w-full bg-[var(--theme-bg)] transition-colors duration-300"
+      style={{ height: '100%' }}
+    >
       {/* Background banner image shown initially, fades to black completely when video plays */}
       <img
-        src="/hero-banner.jpg"
+        src="/home.png"
         alt="Unofficial Freshers Banner"
-        className="absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ease-in-out"
+        className="absolute inset-0 h-full w-full object-cover object-top transition-opacity duration-1000 ease-in-out"
         style={{ opacity: showVideo ? 0 : 1 }}
       />
       
@@ -86,7 +89,7 @@ const VideoBanner = () => {
           playsInline
           onTimeUpdate={handleTimeUpdate}
           onEnded={handleEnded}
-          className="absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ease-in-out"
+          className="absolute inset-0 h-full w-full object-cover object-top transition-opacity duration-1000 ease-in-out"
           style={{ opacity }}
         />
       )}
