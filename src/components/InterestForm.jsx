@@ -285,11 +285,7 @@ const InterestForm = ({ onRegisterChange }) => {
                   >
                     <option value="" className="text-[var(--theme-text-muted)]">Select Semester</option>
                     <option value="Sem 1">Semester 1</option>
-                    <option value="Sem 2">Semester 2</option>
                     <option value="Sem 3">Semester 3</option>
-                    <option value="Sem 4">Semester 4</option>
-                    <option value="Sem 5">Semester 5</option>
-                    <option value="Sem 6">Semester 6</option>
                   </select>
                   {errors.semester && <p className="text-xs text-red-500">{errors.semester}</p>}
                 </div>
