@@ -81,6 +81,14 @@ const InterestForm = ({ onRegisterChange }) => {
     setIsSubmitting(true)
     setSubmitError('')
 
+    // If user selected Semester 5, do not register — play prank sound and show message
+    if (formData.semester === 'Sem 5') {
+      playErrorSound()
+      setSubmitError('Prank! Registration for 5th semester is disabled.')
+      setIsSubmitting(false)
+      return
+    }
+
     // Check for network connectivity before attempting the API call
     if (!navigator.onLine) {
       setSubmitError('No internet connection. Please check your network and try again.')
@@ -286,6 +294,7 @@ const InterestForm = ({ onRegisterChange }) => {
                     <option value="" className="text-[var(--theme-text-muted)]">Select Semester</option>
                     <option value="Sem 1">Semester 1</option>
                     <option value="Sem 3">Semester 3</option>
+                    <option value="Sem 5">Semester 5</option>
                   </select>
                   {errors.semester && <p className="text-xs text-red-500">{errors.semester}</p>}
                 </div>
