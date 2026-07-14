@@ -47,6 +47,17 @@ const InterestForm = ({ onRegisterChange }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
+
+    if (name === 'semester' && (value === 'Sem 3' || value === 'Sem 5')) {
+      playErrorSound()
+      setErrors((prev) => ({
+        ...prev,
+        semester: 'Semester 3 and 5 registration is closed. Only Semester 1 is available.',
+      }))
+      setFormData((prev) => ({ ...prev, semester: prev.semester || '' }))
+      return
+    }
+
     setFormData((prev) => ({ ...prev, [name]: value }))
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: '' }))
@@ -65,6 +76,7 @@ const InterestForm = ({ onRegisterChange }) => {
     }
     
     if (!formData.semester) newErrors.semester = 'Semester is required'
+    else if (formData.semester !== 'Sem 1') newErrors.semester = 'Only Semester 1 registrations are allowed'
     if (!formData.division) newErrors.division = 'Division is required'
     
     setErrors(newErrors)
