@@ -13,9 +13,11 @@ const InterestForm = ({ onRegisterChange }) => {
   const [formData, setFormData] = useState({
     name: '',
     gmail: '',
+    semester: '',
     division: '',
   })
   const [errors, setErrors] = useState({})
+  const registrationClosed = true
 
   // Error sound — plays on validation failure or unsuccessful registration
   const errorAudioRef = useRef(null)
@@ -64,6 +66,7 @@ const InterestForm = ({ onRegisterChange }) => {
       newErrors.gmail = 'Please enter a valid @gmail.com address'
     }
     
+    if (!formData.semester) newErrors.semester = 'Semester is required'
     if (!formData.division) newErrors.division = 'Division is required'
     
     setErrors(newErrors)
@@ -72,6 +75,13 @@ const InterestForm = ({ onRegisterChange }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    if (registrationClosed) {
+      setSubmitError('Registration is currently closed. Please check back later.')
+      playErrorSound()
+      return
+    }
+
     if (!validate()) {
       playErrorSound()
       return
@@ -154,13 +164,13 @@ const InterestForm = ({ onRegisterChange }) => {
               <div className="space-y-2">
                 <h4 className="text-lg font-bold text-[var(--theme-text-heading)] transition-colors duration-300">Freshers Registration</h4>
                 <p className="text-xs leading-relaxed text-[var(--theme-text-muted)] transition-colors duration-300">
-                  Complete your registration now to reserve your spot.
+                  Registration is currently closed for all semesters.
                 </p>
                 <button
                   onClick={() => setIsOpen(true)}
                   className="mt-2 inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold text-white shadow-lg transition-transform hover:scale-105" style={{ backgroundColor: '#4169E1' }}
                 >
-                  <FiLock size={12} /> Register Now
+                  <FiLock size={12} /> Registration Closed
                 </button>
               </div>
             </div>
@@ -208,7 +218,7 @@ const InterestForm = ({ onRegisterChange }) => {
                 </div>
                 <h3 className="text-2xl font-bold text-[var(--theme-text-heading)] transition-colors duration-300">Registration</h3>
                 <p className="mt-2 text-sm text-[var(--theme-text-muted)] transition-colors duration-300">
-                  Fill in your details to register for the Unofficial Freshers Event and get access to passes.
+                  Registration is closed for all semesters. Please check back later for updates.
                 </p>
               </div>
 
@@ -267,6 +277,32 @@ const InterestForm = ({ onRegisterChange }) => {
                   {errors.gmail && <p className="text-xs text-red-500">{errors.gmail}</p>}
                 </div>
 
+                {/* Semester */}
+                <div className="space-y-1">
+                  <label htmlFor="semester" className="text-xs font-semibold uppercase tracking-wider text-[var(--theme-text-muted)] transition-colors duration-300">
+                    Semester
+                  </label>
+                  <select
+                    id="semester"
+                    name="semester"
+                    value={formData.semester}
+                    onChange={handleInputChange}
+                    disabled={registrationClosed}
+                    className={`w-full rounded-xl border bg-[var(--theme-input-bg)] px-4 py-3 text-sm text-[var(--theme-text-heading)] outline-none transition-all duration-300 focus:border-[var(--theme-violet)] focus:ring-1 focus:ring-[var(--theme-violet)] ${
+                      errors.semester ? 'border-red-500' : 'border-[var(--theme-border)]'
+                    } ${registrationClosed ? 'cursor-not-allowed opacity-70' : ''}`}
+                  >
+                    <option value="" className="text-[var(--theme-text-muted)]">Select Semester</option>
+                    <option value="Sem 1">Semester 1</option>
+                    <option value="Sem 3">Semester 3</option>
+                    <option value="Sem 5">Semester 5</option>
+                  </select>
+                  {registrationClosed && (
+                    <p className="text-xs text-orange-500">Registration is closed for all semesters.</p>
+                  )}
+                  {errors.semester && <p className="text-xs text-red-500">{errors.semester}</p>}
+                </div>
+
                 {/* Division */}
                 <div className="space-y-1">
                   <label htmlFor="division" className="text-xs font-semibold uppercase tracking-wider text-[var(--theme-text-muted)] transition-colors duration-300">
@@ -296,10 +332,10 @@ const InterestForm = ({ onRegisterChange }) => {
                 )}
                 <button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={registrationClosed || isSubmitting}
                   className="w-full cursor-pointer rounded-xl bg-gradient-to-r from-[#8A2BE2] via-[#B026FF] to-[#FF7A18] py-3 text-sm font-semibold text-white shadow-lg transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isSubmitting ? 'Registering...' : 'Complete Registration'}
+                  {registrationClosed ? 'Registration Closed' : isSubmitting ? 'Registering...' : 'Complete Registration'}
                 </button>
               </form>
             </motion.div>
