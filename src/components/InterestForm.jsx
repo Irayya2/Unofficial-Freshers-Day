@@ -13,7 +13,6 @@ const InterestForm = ({ onRegisterChange }) => {
   const [formData, setFormData] = useState({
     name: '',
     gmail: '',
-    semester: '',
     division: '',
   })
   const [errors, setErrors] = useState({})
@@ -48,16 +47,6 @@ const InterestForm = ({ onRegisterChange }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target
 
-    if (name === 'semester' && (value === 'Sem 3' || value === 'Sem 5')) {
-      playErrorSound()
-      setErrors((prev) => ({
-        ...prev,
-        semester: 'Semester 3 and 5 registration is closed. Only Semester 1 is available.',
-      }))
-      setFormData((prev) => ({ ...prev, semester: prev.semester || '' }))
-      return
-    }
-
     setFormData((prev) => ({ ...prev, [name]: value }))
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: '' }))
@@ -75,8 +64,6 @@ const InterestForm = ({ onRegisterChange }) => {
       newErrors.gmail = 'Please enter a valid @gmail.com address'
     }
     
-    if (!formData.semester) newErrors.semester = 'Semester is required'
-    else if (formData.semester !== 'Sem 1') newErrors.semester = 'Only Semester 1 registrations are allowed'
     if (!formData.division) newErrors.division = 'Division is required'
     
     setErrors(newErrors)
@@ -108,7 +95,6 @@ const InterestForm = ({ onRegisterChange }) => {
           {
             "Name": formData.name.trim(),
             "Gmail": formData.gmail.trim(),
-            "Semester": formData.semester,
             "Division": formData.division,
           },
         ])
@@ -279,28 +265,6 @@ const InterestForm = ({ onRegisterChange }) => {
                     />
                   </div>
                   {errors.gmail && <p className="text-xs text-red-500">{errors.gmail}</p>}
-                </div>
-
-                {/* Semester */}
-                <div className="space-y-1">
-                  <label htmlFor="semester" className="text-xs font-semibold uppercase tracking-wider text-[var(--theme-text-muted)] transition-colors duration-300">
-                    Semester
-                  </label>
-                  <select
-                    id="semester"
-                    name="semester"
-                    value={formData.semester}
-                    onChange={handleInputChange}
-                    className={`w-full rounded-xl border bg-[var(--theme-input-bg)] px-4 py-3 text-sm text-[var(--theme-text-heading)] outline-none transition-all duration-300 focus:border-[var(--theme-violet)] focus:ring-1 focus:ring-[var(--theme-violet)] ${
-                      errors.semester ? 'border-red-500' : 'border-[var(--theme-border)]'
-                    }`}
-                  >
-                    <option value="" className="text-[var(--theme-text-muted)]">Select Semester</option>
-                    <option value="Sem 1">Semester 1</option>
-                    <option value="Sem 3">Semester 3</option>
-                    <option value="Sem 5">Semester 5</option>
-                  </select>
-                  {errors.semester && <p className="text-xs text-red-500">{errors.semester}</p>}
                 </div>
 
                 {/* Division */}
